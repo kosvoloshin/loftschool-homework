@@ -22,9 +22,7 @@ function map(array, fn) {
     let newArr = [];
   
     for (let i = 0; i < array.length; i++) {
-        let item = fn(array[i], i, array);
-
-        newArr.push(item);
+        newArr.push(fn(array[i], i, array));
     }
 
     return newArr;
@@ -38,7 +36,7 @@ function map(array, fn) {
  */
 function reduce(array, fn, initial) {
     let currentIndex = initial ? 0 : 1;
-    let sum = initial;
+    let sum = initial ? initial : array[0];
 
     for (let i = currentIndex; i < array.length; i++) {
         fn(sum, array[i], i, array);
