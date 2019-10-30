@@ -17,19 +17,21 @@
    isAllTrue([100, 2, 3, 4, 5], n => n < 10) // вернет false
  */
 function isAllTrue(array, fn) {
-  if (array.length === 0) {
-    throw new Error('empty array');
-  } else if (typeof fn !== 'function') {
-    throw new Error('fn is not a function');
-  } else {
-    for (let i = 0; i < array.length; i++) {
-      if (!fn(array[i])) {
-        return false;
-      }
+    if (array.constructor !== Array || !array.length) {
+        throw new Error('empty array');
     }
-  }
+
+    if (typeof fn !== 'function') {
+        throw new Error('fn is not a function');
+    } 
+
+    for (let i = 0; i < array.length; i++) {
+        if (!fn(array[i])) {
+            return false;
+        }
+    }
   
-  return true;
+    return true;
 }
 
 /*
@@ -49,15 +51,17 @@ function isAllTrue(array, fn) {
    isSomeTrue([1, 2, 3, 4, 5], n => n > 20) // вернет false
  */
 function isSomeTrue(array, fn) {
-    if (array.length === 0) {
+    if (array.constructor !== Array || !array.length) {
         throw new Error('empty array');
-    } else if (typeof fn !== 'function') {
+    }
+
+    if (typeof fn !== 'function') {
         throw new Error('fn is not a function');
-    } else {
-        for (let i = 0; i < array.length; i++) {
-            if (fn(array[i])) {
-                return true;
-            }
+    } 
+
+    for (let i = 0; i < array.length; i++) {
+        if (fn(array[i])) {
+            return true;
         }
     }
   
@@ -110,8 +114,25 @@ function returnBadArguments(fn, ...args) {
    - number не является числом (с текстом "number is not a number")
    - какой-либо из аргументов div является нулем (с текстом "division by 0")
  */
-function calculator() {
-  
+function calculator(number = 0) {
+    if (!isFinite(number)) {
+        throw new Error('number is not a number');
+    }
+
+    return {
+        sum: (...args) => args.reduce((acc, current) => acc + current, number),
+        dif: (...args) => args.reduce((acc, current) => acc - current, number),
+        mul: (...args) => args.reduce((acc, current) => acc * current, number),
+        div: (...args) => (
+            args.reduce((acc, current) => {
+                if (current === 0) {
+                    throw new Error('division by 0');
+                }
+
+                return acc /current
+            }, number)
+        ),
+    };
 }
 
 /* При решении задач, пострайтесь использовать отладчик */
