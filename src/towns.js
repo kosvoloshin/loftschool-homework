@@ -36,8 +36,12 @@ const homeworkContainer = document.querySelector('#homework-container');
  Массив городов пожно получить отправив асинхронный запрос по адресу
  https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json
  */
-function loadTowns() {
-}
+const loadTowns = () => {
+    const url = 'https://raw.githubusercontent.com/smelukov/citiesTest/master/cities.json';
+
+    return fetch(url)
+        .then(res => res.json())
+};
 
 /*
  Функция должна проверять встречается ли подстрока chunk в строке full
@@ -51,7 +55,10 @@ function loadTowns() {
    isMatching('Moscow', 'Moscov') // false
  */
 function isMatching(full, chunk) {
+    return full.toLowerCase().includes(chunk.toLowerCase())
 }
+
+let cities = [];
 
 /* Блок с надписью "Загрузка" */
 const loadingBlock = homeworkContainer.querySelector('#loading-block');
@@ -62,8 +69,21 @@ const filterInput = homeworkContainer.querySelector('#filter-input');
 /* Блок с результатами поиска */
 const filterResult = homeworkContainer.querySelector('#filter-result');
 
+loadTowns()
+    .then(res => {
+        cities = res;
+        loadingBlock.classList.add('hidden');
+        filterBlock.classList.remove('hidden');
+    });
+
 filterInput.addEventListener('keyup', function() {
     // это обработчик нажатия кливиш в текстовом поле
+    filterResult.innerHTML = filterInput.value
+        ? cities
+            .filter(item => isMatching(item.name, filterInput.value))
+            .map(item => `<div>${item.name}</div>`)
+            .join('')
+        : ''
 });
 
 export {
