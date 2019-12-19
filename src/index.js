@@ -20,7 +20,7 @@ function forEach(array, fn) {
  */
 function map(array, fn) {
     let newArr = [];
-  
+
     for (let i = 0; i < array.length; i++) {
         newArr.push(fn(array[i], i, array));
     }
@@ -55,7 +55,7 @@ function reduce(array, fn, initial) {
  */
 function upperProps(obj) {
     let arr = [];
-    
+
     for (let key in obj) {
         arr.push(key.toUpperCase());
     }
@@ -85,15 +85,14 @@ function slice(array, from = 0, to = array.length) {
  Функция принимает объект и должна вернуть Proxy для этого объекта
  Proxy должен перехватывать все попытки записи значений свойств и возводить это значение в квадрат
  */
-/* function createProxy(obj) {
+function createProxy(obj) {
+    return new Proxy(obj, {
+        set(obj, key, value) {
+            obj[key] = value ** 2;
 
-} */
+            return true;
+        },
+    });
+}
 
-export {
-    forEach,
-    map,
-    reduce,
-    upperProps,
-    slice,
-    // createProxy
-};
+export { forEach, map, reduce, upperProps, slice, createProxy };
