@@ -11,10 +11,10 @@
    createDivWithText('loftschool') // создаст элемент div, поместит в него 'loftschool' и вернет созданный элемент
  */
 function createDivWithText(text) {
-    const div = document.createElement('div');
+    const div = document.createElement("div");
 
     div.innerHTML = text;
-  
+
     return div;
 }
 
@@ -27,7 +27,7 @@ function createDivWithText(text) {
    prepend(document.querySelector('#one'), document.querySelector('#two')) // добавит элемент переданный первым аргументом в начало элемента переданного вторым аргументом
  */
 function prepend(what, where) {
-    return where.insertAdjacentElement('afterbegin', what);
+    return where.insertAdjacentElement("afterbegin", what);
 }
 
 /*
@@ -52,13 +52,13 @@ function prepend(what, where) {
 function findAllPSiblings(where) {
     let result = [];
     let arr = where.children;
-    
+
     for (let i = 0; i < arr.length - 1; i++) {
-        if (arr[i].nextElementSibling.tagName.toLowerCase() === 'p') {
+        if (arr[i].nextElementSibling.tagName.toLowerCase() === "p") {
             result.push(arr[i]);
         }
     }
-    
+
     return result;
 }
 
@@ -83,7 +83,7 @@ function findError(where) {
     let result = [];
 
     for (let child of where.childNodes) {
-        if (child.nodeType === 1 && child.tagName !== 'SCRIPT') {
+        if (child.nodeType === 1 && child.tagName !== "SCRIPT") {
             result = [...result, child.innerText];
         }
     }
@@ -109,7 +109,7 @@ function deleteTextNodes(where) {
             child.remove();
         }
     }
-    
+
     return where.childNodes;
 }
 
@@ -155,7 +155,39 @@ function deleteTextNodesRecursive(where) {
    }
  */
 function collectDOMStat(root) {
-  
+    const stat = {
+        tags: {},
+        classes: {},
+        texts: 0,
+    };
+
+    function scan(root) {
+        for (const child of root.childNodes) {
+            if (child.nodeType == Node.TEXT_NODE) {
+                stat.texts++;
+            } else if (child.nodeType == Node.ELEMENT_NODE) {
+                if (child.tagName in stat.tags) {
+                    stat.tags[child.tagName]++;
+                } else {
+                    stat.tags[child.tagName] = 1;
+                }
+
+                for (const className of child.classList) {
+                    if (className in stat.classes) {
+                        stat.classes[className]++;
+                    } else {
+                        stat.classes[className] = 1;
+                    }
+                }
+
+                scan(child);
+            }
+        }
+    }
+
+    scan(root);
+
+    return stat;
 }
 
 /*
@@ -190,8 +222,7 @@ function collectDOMStat(root) {
      nodes: [div]
    }
  */
-function observeChildNodes(where, fn) {
-}
+function observeChildNodes(where, fn) {}
 
 export {
     createDivWithText,
@@ -201,5 +232,5 @@ export {
     deleteTextNodes,
     deleteTextNodesRecursive,
     collectDOMStat,
-    observeChildNodes
+    observeChildNodes,
 };
